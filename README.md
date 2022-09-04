@@ -1,6 +1,6 @@
-# Contact APP
+# Contact App
 
-This app is created with the ReactJS. 
+This app is used to store the contact information of the user. It is created with the ReactJS. 
 
 ## JSON Server
 
