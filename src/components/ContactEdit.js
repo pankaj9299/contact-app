@@ -8,7 +8,7 @@ const ContactEdit = (props) => {
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
 
-    const update = (e) => {
+    const update = (e) => { 
         e.preventDefault();
         if(newName === '' || newEmail === '') {
             alert('All fields are mandatory');
