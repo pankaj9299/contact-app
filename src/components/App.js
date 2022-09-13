@@ -13,6 +13,8 @@ import ContactEdit from './ContactEdit';
 function App() {
   //const LOCAL_STORAGE_KEY = "contacts";
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   // Retrive Contacts
   const retriveContacts = async () => {
@@ -51,6 +53,21 @@ function App() {
 
   }
 
+  const searchHandler = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    if(searchTerm !== '') {
+      const newSearchResults = contacts.filter( (contact) => {
+        return Object.values(contact)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      });
+      setSearchResults(newSearchResults);
+    } else {
+      setSearchResults(contacts);
+    }
+  }
+
   // retrive the contacts
   useEffect(() => {
     // const retriveContact = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
@@ -76,7 +93,17 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path='/' element={<ContactList contacts={contacts} getContactId={removeContactHandler} />} />
+          <Route 
+            path='/' 
+            element={
+              <ContactList 
+                contacts={searchResults.length < 1 ? contacts : searchResults} 
+                getContactId={removeContactHandler} 
+                term={searchTerm}
+                searchKeyword={searchHandler}
+              />
+            } 
+          />
           <Route path='add' element={<AddContact addContactHandler={addContactHandler} />} />
           <Route path='contact/:id' element={<ContactDetail />} />
           <Route path='delete/:id' element={<DeleteContact getContactId={removeContactHandler} />} />
