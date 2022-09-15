@@ -13,6 +13,7 @@ import ContactEdit from './ContactEdit';
 function App() {
   //const LOCAL_STORAGE_KEY = "contacts";
   const [contacts, setContacts] = useState([]);
+  const [selectTerm, setSelectTerm] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -53,14 +54,43 @@ function App() {
 
   }
 
-  const searchHandler = (searchTerm) => {
+  const selectHandler = (filterVal) => {
+    const newFilterVal = contacts.filter( (contact) => {
+      return contact.email === filterVal;
+    });
+    setSearchResults(newFilterVal);
+  }
+
+  const searchHandler = (searchTerm, filterTerm) => {
     setSearchTerm(searchTerm);
-    if(searchTerm !== '') {
+    if(searchTerm !== '' && filterTerm !== '') {
+      const searchResults = contacts.filter( (contact) => {
+        return Object.values(contact)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      });
+      const newSearchResults = searchResults.filter( (contact) => {
+        return Object.values(contact)
+          .join(" ")
+          .toLowerCase()
+          .includes(filterTerm);
+      });
+      setSearchResults(newSearchResults);
+    } else if(searchTerm !== '') {
       const newSearchResults = contacts.filter( (contact) => {
         return Object.values(contact)
           .join(" ")
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
+      });
+      setSearchResults(newSearchResults);
+    } else if(filterTerm !== '') {
+      const newSearchResults = contacts.filter( (contact) => {
+        return Object.values(contact)
+          .join(" ")
+          .toLowerCase()
+          .includes(filterTerm);
       });
       setSearchResults(newSearchResults);
     } else {
@@ -78,6 +108,7 @@ function App() {
       const getContacts = await retriveContacts();
       if (getContacts) {
         setContacts(getContacts);
+        setSelectTerm(getContacts);
       }
     };
 
@@ -101,6 +132,8 @@ function App() {
                 getContactId={removeContactHandler} 
                 term={searchTerm}
                 searchKeyword={searchHandler}
+                filterTerm={selectTerm}
+                selectFilter={selectHandler}
               />
             } 
           />

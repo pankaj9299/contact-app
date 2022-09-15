@@ -4,16 +4,20 @@ import ContactCard from "./ContactCard";
 
 const ContactList = (props) => {
     const inputE1 = useRef("");
+    const inputE2 = useRef("");
     const deleteHandler = (id) => {
         props.getContactId(id);
      };
-
+     
      const getSearchTerm = () => {
-        props.searchKeyword(inputE1.current.value);
+        props.searchKeyword(inputE1.current.value, inputE2.current.value);
+     }
+
+     const selectVal = () => {
+        props.selectFilter(inputE2.current.value);
      }
 
     const renderContactList = props.contacts.map((contact) => {
-       
         return (
             <ContactCard 
                 contact={contact} 
@@ -22,19 +26,44 @@ const ContactList = (props) => {
             /> 
         );
     });
+    
+    const selectOptions = props.filterTerm.map((contact) => {
+        return (
+            <option key={contact.id} value={contact.email}>{contact.email}</option>
+        );
+    });
     return (
         <div className="main" style={{marginTop: "50px"}}>
-            <h3>Contact List
-                <Link to="/add">
-                    <button className="ui button blue right floated">Add Contact</button>
-                </Link>
-                <div className="ui search">
-                    <div className="ui icon input" style={{marginTop: "10px", width: "100%"}}>
-                        <input ref={inputE1} type="text" value={props.term} onChange={ getSearchTerm } placeholder="Search here ..." className="prompt" />
-                        <i className="search icon"></i>
+            <div className="ui grid">
+                <div className="eight wide column">
+                    <h3>Contact List</h3>
+                </div>
+                <div className="eight wide column">
+                    <Link to="/add">
+                        <button className="ui button blue right floated">Add Contact</button>
+                    </Link>
+                </div>
+            </div>
+            <div className="ui grid">
+                <div className="three wide column">
+                    <div className="ui form">
+                        <div className="field">
+                            <select className="ui dropdown" ref={inputE2}  onChange={getSearchTerm}>
+                                <option value="">Email</option>
+                                {selectOptions}
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </h3>
+                <div className="thirteen wide column">
+                    <div className="ui search">
+                        <div className="ui icon input" style={{ marginTop: "10px", width: "100%" }}>
+                            <input ref={inputE1} type="text" onChange={getSearchTerm} placeholder="Search here ..." className="" />
+                            <i className="search icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="ui celled list">
                 {renderContactList}
             </div>
