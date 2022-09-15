@@ -17,6 +17,14 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1); // User is currently on this page
+  const [recordsPerPage] = useState(1); // No of Records to be displayed on each page  
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+  const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord); // Records to be displayed on the current page
+  const nPages = Math.ceil(contacts.length / recordsPerPage);
+
   // Retrive Contacts
   const retriveContacts = async () => {
     const response = await api.get("/contacts");
@@ -128,12 +136,15 @@ function App() {
             path='/' 
             element={
               <ContactList 
-                contacts={searchResults.length < 1 ? contacts : searchResults} 
+                contacts={currentRecords.length < 1 ? currentRecords : currentRecords} 
                 getContactId={removeContactHandler} 
                 term={searchTerm}
                 searchKeyword={searchHandler}
                 filterTerm={selectTerm}
                 selectFilter={selectHandler}
+                nPages = { nPages }
+                currentPage = { currentPage } 
+                setCurrentPage = { setCurrentPage }
               />
             } 
           />
