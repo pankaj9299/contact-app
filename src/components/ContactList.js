@@ -5,12 +5,12 @@ import ContactCard from "./ContactCard";
 const ContactList = (props) => {
     const pageNumbers = [...Array(props.nPages + 1).keys()].slice(1);
     const nextPage = () => {
-        if (props.currentPage !== props.nPages) props.setCurrentPage(props.currentPage + 1)
+        if (props.currentPage !== props.nPages) pagingHandler(props.currentPage + 1)
     }
     const prevPage = () => {
-        if (props.currentPage !== 1) props.setCurrentPage(props.currentPage - 1)
+        if (props.currentPage !== 1) pagingHandler(props.currentPage - 1)
     }
-
+    
     const inputE1 = useRef("");
     const inputE2 = useRef("");
     const deleteHandler = (id) => {
@@ -20,9 +20,9 @@ const ContactList = (props) => {
     const getSearchTerm = () => {
         props.searchKeyword(inputE1.current.value, inputE2.current.value);
     }
-
-    const selectVal = () => {
-        props.selectFilter(inputE2.current.value);
+    
+    const pagingHandler = (pgNumber) => {
+        props.setCurrentPage(pgNumber, inputE1.current.value, inputE2.current.value)
     }
 
     const renderContactList = props.contacts.map((contact) => {
@@ -76,15 +76,15 @@ const ContactList = (props) => {
                 {renderContactList}
             </div>
             <div className="ui pagination menu">
-                <a className="item" onClick={prevPage}>
+                <a href="/#" className="item" onClick={prevPage}>
                     Previous
                 </a>
                 {pageNumbers.map(pgNumber => (
-                    <a key={pgNumber} className={`item ${props.currentPage == props.pgNumber ? 'active' : ''} `} onClick={() => props.setCurrentPage(pgNumber)}>
+                    <a href="/#" key={pgNumber} className={`item ${props.currentPage === props.pgNumber ? 'active' : ''} `} onClick={() => pagingHandler(pgNumber)}>
                         {pgNumber}
                     </a>
                 ))}
-                <a className="item" onClick={nextPage}>
+                <a href="/#" className="item" onClick={nextPage}>
                     Next
                 </a>
             </div>

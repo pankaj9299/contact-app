@@ -15,16 +15,27 @@ function App() {
   const [contacts, setContacts] = useState([]);
   const [selectTerm, setSelectTerm] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-
+  //const [searchResults, setSearchResults] = useState([]);
+  
   // Pagination
   const [currentPage, setCurrentPage] = useState(1); // User is currently on this page
   const [recordsPerPage] = useState(1); // No of Records to be displayed on each page  
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
-  const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord); // Records to be displayed on the current page
-  const nPages = Math.ceil(contacts.length / recordsPerPage);
-
+  //const indexOfLastRecord = currentPage * recordsPerPage;
+  //const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+  //const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord); // Records to be displayed on the current page
+  //const nPages = Math.ceil(contacts.length / recordsPerPage);
+  
+  const [initRecords, setInitRecords] = useState([]);
+  const [initnPages, setInitnPages] = useState(0);
+  
+  // Pagination handler
+  const setCurrentPageHandler = (values, searchTerm, filterTerm) => {
+    searchTerm = typeof searchTerm === 'undefined' ? "" : searchTerm;
+    filterTerm = typeof filterTerm === 'undefined' ? "" : filterTerm;
+    filterHandler(values, searchTerm, filterTerm);
+    setCurrentPage(values);
+  };
+  
   // Retrive Contacts
   const retriveContacts = async () => {
     const response = await api.get("/contacts");
@@ -62,14 +73,9 @@ function App() {
 
   }
 
-  const selectHandler = (filterVal) => {
-    const newFilterVal = contacts.filter( (contact) => {
-      return contact.email === filterVal;
-    });
-    setSearchResults(newFilterVal);
-  }
-
-  const searchHandler = (searchTerm, filterTerm) => {
+  // Function to handle the filter
+  const filterHandler = (currentPage, searchTerm, filterTerm) => {
+    console.log(searchTerm, filterTerm);
     setSearchTerm(searchTerm);
     if(searchTerm !== '' && filterTerm !== '') {
       const searchResults = contacts.filter( (contact) => {
@@ -84,7 +90,14 @@ function App() {
           .toLowerCase()
           .includes(filterTerm);
       });
-      setSearchResults(newSearchResults);
+      
+      const indexOfLastRecord = currentPage * recordsPerPage;
+      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+      const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
+      setInitRecords(currentRecords);
+
+      const nPages = Math.ceil(newSearchResults.length / 1);
+      setInitnPages(nPages);
     } else if(searchTerm !== '') {
       const newSearchResults = contacts.filter( (contact) => {
         return Object.values(contact)
@@ -92,7 +105,13 @@ function App() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
       });
-      setSearchResults(newSearchResults);
+      const indexOfLastRecord = currentPage * recordsPerPage;
+      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+      const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
+      setInitRecords(currentRecords);
+
+      const nPages = Math.ceil(newSearchResults.length / 1);
+      setInitnPages(nPages);
     } else if(filterTerm !== '') {
       const newSearchResults = contacts.filter( (contact) => {
         return Object.values(contact)
@@ -100,10 +119,26 @@ function App() {
           .toLowerCase()
           .includes(filterTerm);
       });
-      setSearchResults(newSearchResults);
+      const indexOfLastRecord = currentPage * recordsPerPage;
+      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+      const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
+      setInitRecords(currentRecords);
+
+      const nPages = Math.ceil(newSearchResults.length / 1);
+      setInitnPages(nPages);
     } else {
-      setSearchResults(contacts);
+      const indexOfLastRecord = currentPage * recordsPerPage;
+      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+      const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord);
+      setInitRecords(currentRecords);
+
+      const nPages = Math.ceil(contacts.length / 1);
+      setInitnPages(nPages);
     }
+  };
+
+  const searchHandler = (searchTerm, filterTerm) => {
+    filterHandler(currentPage, searchTerm, filterTerm);
   }
 
   // retrive the contacts
@@ -117,6 +152,13 @@ function App() {
       if (getContacts) {
         setContacts(getContacts);
         setSelectTerm(getContacts);
+
+        const indexOfLastRecord = 1 * 1;
+        const indexOfFirstRecord = indexOfLastRecord - 1;
+        setInitRecords(getContacts.slice(indexOfFirstRecord, indexOfLastRecord));
+
+        const nPages = Math.ceil(getContacts.length / 1);
+        setInitnPages(nPages);
       }
     };
 
@@ -136,15 +178,14 @@ function App() {
             path='/' 
             element={
               <ContactList 
-                contacts={currentRecords.length < 1 ? currentRecords : currentRecords} 
+                contacts={initRecords.length < 1 ? initRecords : initRecords} 
                 getContactId={removeContactHandler} 
                 term={searchTerm}
                 searchKeyword={searchHandler}
                 filterTerm={selectTerm}
-                selectFilter={selectHandler}
-                nPages = { nPages }
+                nPages = { initnPages }
                 currentPage = { currentPage } 
-                setCurrentPage = { setCurrentPage }
+                setCurrentPage = { setCurrentPageHandler }
               />
             } 
           />
