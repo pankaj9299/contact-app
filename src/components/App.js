@@ -19,7 +19,7 @@ function App() {
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1); // User is currently on this page
-  const [recordsPerPage] = useState(1); // No of Records to be displayed on each page  
+  const [recordsPerPage] = useState(2); // No of Records to be displayed on each page  
   //const indexOfLastRecord = currentPage * recordsPerPage;
   //const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
   //const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord); // Records to be displayed on the current page
@@ -96,7 +96,7 @@ function App() {
       const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
       setInitRecords(currentRecords);
 
-      const nPages = Math.ceil(newSearchResults.length / 1);
+      const nPages = Math.ceil(newSearchResults.length / recordsPerPage);
       setInitnPages(nPages);
     } else if(searchTerm !== '') {
       const newSearchResults = contacts.filter( (contact) => {
@@ -110,7 +110,7 @@ function App() {
       const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
       setInitRecords(currentRecords);
 
-      const nPages = Math.ceil(newSearchResults.length / 1);
+      const nPages = Math.ceil(newSearchResults.length / recordsPerPage);
       setInitnPages(nPages);
     } else if(filterTerm !== '') {
       const newSearchResults = contacts.filter( (contact) => {
@@ -124,7 +124,7 @@ function App() {
       const currentRecords = newSearchResults.slice(indexOfFirstRecord, indexOfLastRecord);
       setInitRecords(currentRecords);
 
-      const nPages = Math.ceil(newSearchResults.length / 1);
+      const nPages = Math.ceil(newSearchResults.length / recordsPerPage);
       setInitnPages(nPages);
     } else {
       const indexOfLastRecord = currentPage * recordsPerPage;
@@ -132,7 +132,7 @@ function App() {
       const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord);
       setInitRecords(currentRecords);
 
-      const nPages = Math.ceil(contacts.length / 1);
+      const nPages = Math.ceil(contacts.length / recordsPerPage);
       setInitnPages(nPages);
     }
   };
@@ -153,11 +153,11 @@ function App() {
         setContacts(getContacts);
         setSelectTerm(getContacts);
 
-        const indexOfLastRecord = 1 * 1;
-        const indexOfFirstRecord = indexOfLastRecord - 1;
+        const indexOfLastRecord = currentPage * recordsPerPage;
+        const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
         setInitRecords(getContacts.slice(indexOfFirstRecord, indexOfLastRecord));
 
-        const nPages = Math.ceil(getContacts.length / 1);
+        const nPages = Math.ceil(getContacts.length / recordsPerPage);
         setInitnPages(nPages);
       }
     };
