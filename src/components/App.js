@@ -19,7 +19,7 @@ function App() {
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1); // User is currently on this page
-  const [recordsPerPage] = useState(2); // No of Records to be displayed on each page  
+  const [recordsPerPage] = useState(1); // No of Records to be displayed on each page  
   //const indexOfLastRecord = currentPage * recordsPerPage;
   //const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
   //const currentRecords = contacts.slice(indexOfFirstRecord, indexOfLastRecord); // Records to be displayed on the current page
@@ -179,6 +179,7 @@ function App() {
             element={
               <ContactList 
                 contacts={initRecords.length < 1 ? initRecords : initRecords} 
+                recordsPerPage={recordsPerPage}
                 getContactId={removeContactHandler} 
                 term={searchTerm}
                 searchKeyword={searchHandler}

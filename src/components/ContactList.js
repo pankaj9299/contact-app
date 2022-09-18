@@ -25,8 +25,6 @@ const ContactList = (props) => {
         props.setCurrentPage(pgNumber, inputE1.current.value, inputE2.current.value)
     }
 
-    console.log(props.contacts);
-    console.log(props.nPages);
     const renderContactList = props.contacts.map((contact) => {
         return (
             <ContactCard
@@ -77,13 +75,13 @@ const ContactList = (props) => {
             <div className="ui celled list">
                 {renderContactList}
             </div>
-            {props.nPages > 1 ?
+            {props.nPages > props.recordsPerPage ?
             <div className="ui pagination menu">
                 <a href="/#" className="item" onClick={prevPage}>
                     Previous
                 </a>
                 {pageNumbers.map(pgNumber => (
-                    <a href="/#" key={pgNumber} className={`item ${props.currentPage === props.pgNumber ? 'active' : ''} `} onClick={() => pagingHandler(pgNumber)}>
+                    <a href="/#" key={pgNumber} className={`item ${props.currentPage === pgNumber ? 'active' : ''} `} onClick={() => pagingHandler(pgNumber)}>
                         {pgNumber}
                     </a>
                 ))}
